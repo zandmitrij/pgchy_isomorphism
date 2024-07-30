@@ -18,6 +18,11 @@ typedef struct {
 PG_FUNCTION_INFO_V1(chython_compiled_structure_has_match);
 
 
+static bool get_mapping(const MyStruct *query, const MyStruct *mol) {
+    return false;
+}
+
+
 Datum chython_compiled_structure_has_match(PG_FUNCTION_ARGS) {
     bytea *query_bytes = PG_GETARG_BYTEA_P(0);
     bytea *mol_bytes = PG_GETARG_BYTEA_P(1);
@@ -53,6 +58,3 @@ Datum chython_compiled_structure_has_match(PG_FUNCTION_ARGS) {
 }
 
 
-static bool get_mapping(const MyStruct *query, const MyStruct *mol) {
-    return false;
-}
