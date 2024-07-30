@@ -39,10 +39,14 @@ jobs:
     - name: Add conda-forge channel
       run: conda config --add channels conda-forge
 
+    - name: Initialize conda
+      run: conda init bash
+
     - name: Create conda environment
       run: conda create --name build-env gcc make postgresql
 
     - name: Activate conda environment
+      shell: bash -l {0}
       run: conda activate build-env
 
     - name: Build extension
