@@ -51,7 +51,6 @@ jobs:
 
     - name: Build extension
       run: |
-        source activate build-env
         make
         sudo make install
 
