@@ -53,7 +53,8 @@ Datum chython_compiled_structure_has_match(PG_FUNCTION_ARGS) {
     query_struct = (MyStruct *) decompressed_query;
     mol_struct = (MyStruct *) decompressed_mol;
 
-    bool result = get_mapping(query_struct, mol_struct);
+    bool result;
+    result = get_mapping(query_struct, mol_struct);
 
     pfree(decompressed_query);
     pfree(decompressed_mol);
