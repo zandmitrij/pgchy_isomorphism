@@ -27,6 +27,8 @@ Datum chython_compiled_structure_has_match(PG_FUNCTION_ARGS) {
 
     MyStruct *query_struct;
     MyStruct *mol_struct;
+    bool result;
+
 
     bytea *query_bytes = PG_GETARG_BYTEA_P(0);
     bytea *mol_bytes = PG_GETARG_BYTEA_P(1);
@@ -53,7 +55,6 @@ Datum chython_compiled_structure_has_match(PG_FUNCTION_ARGS) {
     query_struct = (MyStruct *) decompressed_query;
     mol_struct = (MyStruct *) decompressed_mol;
 
-    bool result;
     result = get_mapping(query_struct, mol_struct);
 
     pfree(decompressed_query);
