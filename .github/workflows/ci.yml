@@ -43,7 +43,7 @@ jobs:
       run: conda create --name build-env gcc make postgresql
 
     - name: Activate conda environment
-      run: echo "conda activate build-env" >> $GITHUB_ENV
+      run: conda activate build-env
 
     - name: Build extension
       run: |
