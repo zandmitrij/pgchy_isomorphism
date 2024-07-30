@@ -36,8 +36,11 @@ jobs:
         auto-activate-base: false
         python-version: 3.8.12
 
+    - name: Add conda-forge channel
+      run: conda config --add channels conda-forge
+
     - name: Create conda environment
-      run: conda create --name build-env gcc make postgresql-server-dev-all
+      run: conda create --name build-env gcc make postgresql
 
     - name: Activate conda environment
       run: echo "conda activate build-env" >> $GITHUB_ENV
