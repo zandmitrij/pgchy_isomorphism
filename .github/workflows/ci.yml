@@ -36,6 +36,9 @@ jobs:
         auto-activate-base: false
         python-version: 3.8.12
 
+    - name: Install postgres c lib
+      run: sudo apt-get install postgresql-server-dev-all
+
     - name: Add conda-forge channel
       run: conda config --add channels conda-forge
 
