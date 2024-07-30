@@ -12,7 +12,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres:latest
+        image: postgres:14
         ports:
           - 5432:5432
         env:
@@ -29,11 +29,22 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Install dependencies
-      run: sudo apt-get update && sudo apt-get install -y postgresql-server-dev-all gcc make
+    - name: Set up Miniconda
+      uses: conda-incubator/setup-miniconda@v2
+      with:
+        auto-update-conda: true
+        auto-activate-base: false
+        python-version: 3.8.12
+
+    - name: Create conda environment
+      run: conda create --name build-env gcc make postgresql-server-dev-all
+
+    - name: Activate conda environment
+      run: echo "conda activate build-env" >> $GITHUB_ENV
 
     - name: Build extension
       run: |
+        source activate build-env
         make
         sudo make install
 
@@ -45,5 +56,5 @@ jobs:
         PGUSER: postgres
         PGPASSWORD: postgres
       run: |
-        psql -h localhost -d my_database -c "CREATE EXTENSION pgchy_isomorphism;"
-        # Здесь добавьте команды для запуска ваших тестов
+        source activate build-env
+        psql -h localhost -d my_database -c "CREATE EXTENSION your_extension_name;"
