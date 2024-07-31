@@ -62,11 +62,14 @@ jobs:
     - name: Wait for PostgreSQL to start
       run: sleep 10
 
+    - name: Copy extension files
+      run: |
+        sudo cp pgchy_isomorphism.control /usr/share/postgresql/14/extension/
+        sudo cp sql/pgchy_isomorphism--1.0.sql /usr/share/postgresql/14/extension/
+
     - name: Run tests
       env:
         PGUSER: postgres
         PGPASSWORD: postgres
       run: |
-        sudo cp pgchy_isomorphism.control /usr/share/postgresql/14/extension/
-        sudo cp sql/pgchy_isomorphism--1.0.sql /usr/share/postgresql/14/extension/
         psql -h localhost -d my_database -c "CREATE EXTENSION pgchy_isomorphism;"
