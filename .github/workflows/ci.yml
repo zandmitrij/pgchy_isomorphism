@@ -67,5 +67,4 @@ jobs:
         PGUSER: postgres
         PGPASSWORD: postgres
       run: |
-        conda activate build-env
         psql -h localhost -d my_database -c "CREATE EXTENSION pgchy_isomorphism;"
