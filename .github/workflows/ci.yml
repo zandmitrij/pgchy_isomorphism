@@ -77,5 +77,6 @@ jobs:
       run: |
         conda activate build-env
         ls -la /usr/share/postgresql/14/extension/ | grep pgchy
+        ls $(pg_config --pkglibdir)/pgchy_isomorphism.so
         conda env list
         psql -h localhost -d my_database -c "CREATE EXTENSION pgchy_isomorphism;"
