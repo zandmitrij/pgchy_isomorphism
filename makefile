@@ -1,6 +1,6 @@
 EXTENSION = pgchy_isomorphism
 MODULE_big = pgchy_isomorphism
-DATA = pgchy_isomorphism--1.0.sql pgchy_isomorphism.control
+DATA = pgchy_isomorphism--1.0.sql
 OBJS = src/pgchy_isomorphism.o
 
 PG_CONFIG = pg_config

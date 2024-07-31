@@ -1,0 +1,6 @@
+# pgchy_isomorphism.control
+
+comment = 'Chython isomorphism extension for PostgreSQL'
+default_version = '1.0'
+relocatable = true
+module_pathname = '$libdir/pgchy_isomorphism'
