@@ -59,15 +59,15 @@ jobs:
         make
         sudo make install
 
-    - name: Wait for PostgreSQL to start
-      run: sleep 10
-
     - name: Copy extension files
       run: |
         sudo cp pgchy_isomorphism.control /usr/share/postgresql/14/extension/
         sudo chmod 644 /usr/share/postgresql/14/extension/pgchy_isomorphism.control
         sudo cp sql/pgchy_isomorphism--1.0.sql /usr/share/postgresql/14/extension/
         sudo chmod 644 /usr/share/postgresql/14/extension/pgchy_isomorphism--1.0.sql
+
+    - name: Wait for PostgreSQL to start
+      run: sleep 10
 
     - name: Run tests
       env:
