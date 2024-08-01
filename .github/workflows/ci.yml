@@ -55,7 +55,9 @@ jobs:
       run: conda activate build-env
 
     - name: Build extension
+      shell: bash -l {0}
       run: |
+        conda activate build-env
         make
         sudo make install
 
