@@ -46,6 +46,7 @@ jobs:
         initdb -D /tmp/pgdata
         pg_ctl -D /tmp/pgdata -l /tmp/pglog start
         sleep 10
+        createuser -s postgres
         createdb my_database
 
     - name: Build extension
