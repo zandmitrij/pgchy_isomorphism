@@ -69,6 +69,7 @@ jobs:
         PGPASSWORD: postgres
       run: |
         conda activate build-env
+        touch ~/benchmark_results.txt
         psql -h localhost -d my_database -c "CREATE EXTENSION pgchy_isomorphism;"
         psql -h localhost -d my_database -c "SELECT run_benchmark();"
 
