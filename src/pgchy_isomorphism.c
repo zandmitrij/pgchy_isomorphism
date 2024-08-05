@@ -89,7 +89,7 @@ run_benchmark(PG_FUNCTION_ARGS)
     end_time = clock();
     elapsed_time = ((double) (end_time - start_time)) / CLOCKS_PER_SEC;
 
-    FILE *f = fopen("benchmark_results.txt", "w");
+    FILE *f = fopen("~/benchmark_results.txt", "w");
     if (f == NULL)
     {
         elog(ERROR, "Can't open file");

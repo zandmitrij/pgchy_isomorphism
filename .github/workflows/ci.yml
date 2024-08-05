@@ -72,4 +72,4 @@ jobs:
         psql -h localhost -d my_database -c "CREATE EXTENSION pgchy_isomorphism;"
 
     - name: Display benchmark results
-      run: cat benchmark_results.txt
+      run: cat ~/benchmark_results.txt
