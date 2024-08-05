@@ -10,21 +10,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    services:
-      postgres:
-        image: postgres:14
-        ports:
-          - 5432:5432
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: my_database
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -54,6 +39,15 @@ jobs:
       shell: bash -l {0}
       run: conda activate build-env
 
+    - name: Start PostgreSQL
+      shell: bash -l {0}
+      run: |
+        conda activate build-env
+        initdb -D /tmp/pgdata
+        pg_ctl -D /tmp/pgdata -l /tmp/pglog start
+        sleep 10
+        createdb my_database
+
     - name: Build extension
       shell: bash -l {0}
       run: |
@@ -69,23 +63,11 @@ jobs:
         cp sql/pgchy_isomorphism--1.0.sql $(pg_config --sharedir)/extension/
         cp pgchy_isomorphism.so $(pg_config --pkglibdir)
 
-    - name: Restart PostgreSQL
-      run: |
-        sudo -u postgres pg_ctlcluster 14 main restart
-        sleep 10
-
-    - name: Check files
-      shell: bash -l {0}
-      run: |
-        conda activate build-env
-        ls -la $(pg_config --sharedir)/extension/ | grep pgchy
-        ls $(pg_config --pkglibdir)/pgchy_isomorphism.so
-
     - name: Run tests
+      shell: bash -l {0}
       env:
         PGUSER: postgres
         PGPASSWORD: postgres
-      shell: bash -l {0}
       run: |
         conda activate build-env
         psql -h localhost -d my_database -c "CREATE EXTENSION pgchy_isomorphism;"
