@@ -76,6 +76,7 @@ jobs:
 
     - name: Check files
       shell: bash -l {0}
+      run: |
         conda activate build-env
         ls -la $(pg_config --sharedir)/extension/ | grep pgchy
         ls $(pg_config --pkglibdir)/pgchy_isomorphism.so
