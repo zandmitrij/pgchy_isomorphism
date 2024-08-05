@@ -3,6 +3,9 @@
 #include "utils/array.h"
 #include <stdint.h>
 #include <lz4.h>
+#include <stdio.h>
+#include <time.h>
+
 
 #ifdef PG_MODULE_MAGIC
 PG_MODULE_MAGIC;
@@ -64,3 +67,36 @@ Datum chython_compiled_structure_has_match(PG_FUNCTION_ARGS) {
 }
 
 
+
+PG_FUNCTION_INFO_V1(run_benchmark);
+
+Datum
+run_benchmark(PG_FUNCTION_ARGS)
+{
+    int64 comparisons = 0;
+    int64 target_comparisons = 1000000000;
+    int64 i;
+    clock_t start_time, end_time;
+    double elapsed_time;
+
+    start_time = clock();
+
+    for (i = 0; i < target_comparisons; i++)
+    {
+        i;
+    }
+
+    end_time = clock();
+    elapsed_time = ((double) (end_time - start_time)) / CLOCKS_PER_SEC;
+
+    FILE *f = fopen("benchmark_results.txt", "w");
+    if (f == NULL)
+    {
+        elog(ERROR, "Can't open file");
+    }
+    fprintf(f, "Time: %f seconds\n", elapsed_time);
+    fprintf(f, "Operations per second: %f\n", target_comparisons / elapsed_time);
+    fclose(f);
+
+    PG_RETURN_VOID();
+}
