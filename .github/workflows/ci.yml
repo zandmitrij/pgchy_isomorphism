@@ -74,6 +74,12 @@ jobs:
         sudo -u postgres pg_ctlcluster 14 main restart
         sleep 10
 
+    - name: Check files
+      shell: bash -l {0}
+        conda activate build-env
+        ls -la $(pg_config --sharedir)/extension/ | grep pgchy
+        ls $(pg_config --pkglibdir)/pgchy_isomorphism.so
+
     - name: Run tests
       env:
         PGUSER: postgres
@@ -81,8 +87,6 @@ jobs:
       shell: bash -l {0}
       run: |
         conda activate build-env
-        ls -la $(pg_config --sharedir)/extension/ | grep pgchy
-        ls $(pg_config --pkglibdir)/pgchy_isomorphism.so
         psql -h localhost -d my_database -c "CREATE EXTENSION pgchy_isomorphism;"
 
     - name: Display benchmark results
