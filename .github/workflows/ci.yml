@@ -36,7 +36,7 @@ jobs:
         auto-activate-base: false
         python-version: 3.8.12
 
-    - name: Install postgres c lib
+    - name: Install dependencies
       run: |
         sudo apt-get update
         sudo apt-get install postgresql-server-dev-14 postgresql-common liblz4-dev
@@ -59,27 +59,19 @@ jobs:
       run: |
         conda activate build-env
         make
-        sudo make install
+        make install
 
     - name: Copy extension files
       shell: bash -l {0}
       run: |
         conda activate build-env
-        sudo cp pgchy_isomorphism.control /usr/share/postgresql/14/extension/
-        sudo chmod 644 /usr/share/postgresql/14/extension/pgchy_isomorphism.control
-        sudo cp sql/pgchy_isomorphism--1.0.sql /usr/share/postgresql/14/extension/
-        sudo chmod 644 /usr/share/postgresql/14/extension/pgchy_isomorphism--1.0.sql
-
-        sudo cp pgchy_isomorphism.control $(pg_config --sharedir)/extension/
-        sudo chmod 644 $(pg_config --sharedir)/extension/pgchy_isomorphism.control
-        sudo cp sql/pgchy_isomorphism--1.0.sql $(pg_config --sharedir)/extension/
-        sudo chmod 644 $(pg_config --sharedir)/extension/pgchy_isomorphism--1.0.sql
-
-        sudo cp $(pwd)/pgchy_isomorphism.so $(pg_config --pkglibdir)
+        cp pgchy_isomorphism.control $(pg_config --sharedir)/extension/
+        cp sql/pgchy_isomorphism--1.0.sql $(pg_config --sharedir)/extension/
+        cp pgchy_isomorphism.so $(pg_config --pkglibdir)
 
     - name: Restart PostgreSQL
       run: |
-        sudo systemctl restart postgresql
+        sudo -u postgres pg_ctlcluster 14 main restart
         sleep 10
 
     - name: Run tests
@@ -89,10 +81,8 @@ jobs:
       shell: bash -l {0}
       run: |
         conda activate build-env
-        ls -la /usr/share/postgresql/14/extension/ | grep pgchy
-        ls -la  $(pg_config --sharedir)/extension
+        ls -la $(pg_config --sharedir)/extension/ | grep pgchy
         ls $(pg_config --pkglibdir)/pgchy_isomorphism.so
-        conda env list
         psql -h localhost -d my_database -c "CREATE EXTENSION pgchy_isomorphism;"
 
     - name: Display benchmark results
