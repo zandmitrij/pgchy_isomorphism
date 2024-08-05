@@ -39,7 +39,7 @@ jobs:
     - name: Install postgres c lib
       run: |
         sudo apt-get update
-        sudo apt-get install postgresql-server-dev-14 postgresql-common liblz4-dev
+        sudo apt-get install postgresql-server-dev-14 postgresql-common liblz4-dev lz4
 
     - name: Add conda-forge channel
       run: conda config --add channels conda-forge
