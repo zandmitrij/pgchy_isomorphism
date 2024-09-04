@@ -1,0 +1,73 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Miniconda
+      uses: conda-incubator/setup-miniconda@v3
+      with:
+        auto-update-conda: true
+        activate-environment: build-env
+        environment-file: environment.yaml
+        auto-activate-base: false
+        python-version: 3.8.12
+
+    - name: Start PostgreSQL
+      shell: bash -l {0}
+      run: |
+        initdb -D /tmp/pgdata
+        pg_ctl -D /tmp/pgdata -l /tmp/pglog start
+        sleep 10
+        createuser -s postgres
+        createdb my_database
+
+    - name: Build extension
+      shell: bash -l {0}
+      run: |
+        make
+        make install
+        # make tests
+
+    - name: Copy extension files
+      shell: bash -l {0}
+      run: |
+        cp pgchy_similarity.control $(pg_config --sharedir)/extension/
+        cp sql/pgchy_similarity--1.0.sql $(pg_config --sharedir)/extension/
+        cp pgchy_similarity.so $(pg_config --pkglibdir)
+  
+    - name: Create extension
+      shell: bash -l {0}
+      env:
+        PGUSER: postgres
+        PGPASSWORD: postgres
+      run: |
+        psql -h localhost -d my_database -c "CREATE EXTENSION plpython3u;"
+        psql -h localhost -d my_database -c "CREATE EXTENSION pgchy_similarity;"
+          
+    - name: Run tests
+      shell: bash -l {0}
+      env:
+        PGUSER: postgres
+        PGPASSWORD: postgres
+      run: |
+        psql -h localhost -d my_database -U postgres -f ./sql/test.sql
+
+    - name: SQL benchmark
+      shell: bash -l {0}
+      env:
+        PGUSER: postgres
+        PGPASSWORD: postgres
+      run: |
+        conda activate build-env
+        psql -h localhost -d my_database -U postgres -f ./sql/benchmark.sql

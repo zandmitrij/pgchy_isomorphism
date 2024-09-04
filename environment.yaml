@@ -1,0 +1,19 @@
+name: build-env
+channels:
+  - dnachun
+  - conda-forge
+  - defaults
+  - motoharu-yano
+dependencies:
+  - gcc
+  - make
+  - postgresql
+  - lz4
+  - dnachun::libpopcnt
+  - motoharu-yano::postgresql-plpython
+  - icu=58
+  - lz4-c
+  - pip
+  - pip:
+    - chython
+    - importlib-resources

@@ -1,0 +1,6 @@
+# pgchy_similarity.control
+
+comment = 'Chython similarity extension for PostgreSQL'
+default_version = '1.0'
+relocatable = true
+module_pathname = '$libdir/pgchy_similarity'
